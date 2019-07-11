@@ -1,13 +1,13 @@
 @extends("Admin.Adminpublic.index")
 @section("main")
 <div class="page-container">
-	<form action="/adminuser" method="get">
+	<form action="/admincates" method="get">
 		<div class="text-c">
-			<input type="text" name="keyword" id="" placeholder=" 输入用户名" style="width:250px" class="input-text">
+			<input type="text" name="keyword" id="" placeholder=" 请输入分类名" style="width:250px" class="input-text">
 			<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont"></i> 搜索</button>
 		</div>
 	</form>
-	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont"></i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加用户" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="/adminuser/create"><i class="Hui-iconfont"></i> 分类添加</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div>
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont"></i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加用户" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="/admincates/create"><i class="Hui-iconfont"></i> 分类添加</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div>
 	
 	<table class="table table-border table-bordered table-bg table-hover table-sort table-responsive dataTable no-footer" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
 			<thead>
@@ -31,10 +31,10 @@
 					<td>{{$val -> path}}</td>
 				
 					<td class="f-14 td-manage">
-						<a style="text-decoration:none" class="ml-5" onclick="article_edit('资讯编辑','article-add.html','10001')" href="/adminuser/{{$val -> id}}/edit" title="修改">
+						<a style="text-decoration:none" class="ml-5" onclick="article_edit('资讯编辑','article-add.html','10001')" href="/admincates/{{$val -> id}}/edit" title="修改">
 						<i class="Hui-iconfont"></i>
 						</a>
-					<form action="/adminuser/{{$val -> id}}" method="post">
+					<form action="/admincates/{{$val -> id}}" method="post">
 						{{method_field("DELETE")}}
          			 	{{csrf_field()}}
 						<button type="submit" title="删除"><i class="Hui-iconfont"></i></button>
@@ -46,6 +46,7 @@
 		</table>
 		
 		<div class="dataTables_paginate paging_full_numbers" id="pages"style="float:right">
+		{{$cates->appends($request)->render()}}
      </div>
 	</div>
 </div>

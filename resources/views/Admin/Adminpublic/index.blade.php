@@ -19,6 +19,11 @@
 <link rel="stylesheet" type="text/css" href="/static/Admins/h-ui.admin/css/style.css" />
 <link rel="stylesheet" type="text/css" href="/static/Admins/css/my.css" />
 <link rel="stylesheet" type="text/css" href="/static/Admins/css/mws-style.css" media="screen">
+<link rel="stylesheet" type="text/css" href="/static/Admins/css/form.css" media="screen">
+<!-- <script type="text/javascript" src="/static/Admins/js/core/mws.js"></script> -->
+
+<script type="text/javascript" src="/static/jquery-1.8.3.min.js"></script>
+
 
 <!--[if IE 6]>
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
@@ -93,6 +98,15 @@
 			</ul>
 		</dd>
 	</dl>
+	<dl id="menu-picture">
+			<dt><i class="Hui-iconfont">&#xe613;</i> 轮播图管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a data-href="picture-list.html" data-title="分类添加" href="/admincates/create">轮播图添加</a></li>
+					<li><a data-href="picture-list.html" data-title="分类列表" href="/admincates">轮播图列表</a></li>
+			</ul>
+		</dd>
+	</dl>
 		<dl id="menu-product">
 			<dt><i class="Hui-iconfont">&#xe620;</i> 商品管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
@@ -136,14 +150,11 @@
 			</ul>
 		</dd>
 		<dl id="menu-system">
-			<dt><i class="Hui-iconfont">&#xe62e;</i> 系统管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dt><i class="Hui-iconfont">&#xe62e;</i> 公告管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
-					<li><a data-href="system-base.html" data-title="系统设置" href="javascript:void(0)">系统设置</a></li>
-					<li><a data-href="system-category.html" data-title="栏目管理" href="javascript:void(0)">栏目管理</a></li>
-					<li><a data-href="system-data.html" data-title="数据字典" href="javascript:void(0)">数据字典</a></li>
-					<li><a data-href="system-shielding.html" data-title="屏蔽词" href="javascript:void(0)">屏蔽词</a></li>
-					<li><a data-href="system-log.html" data-title="系统日志" href="javascript:void(0)">系统日志</a></li>
+					<li><a data-href="system-base.html" data-title="系统设置" href="javascript:void(0)">公告添加</a></li>
+					<li><a data-href="system-log.html" data-title="系统日志" href="/adminarticles">公告列表</a></li>
 			</ul>
 		</dd>
 	</dl>
@@ -161,8 +172,21 @@
 	</div>
 		<div class="Hui-tabNav-more btn-group"><a id="js-tabNav-prev" class="btn radius btn-default size-S" href="javascript:;"><i class="Hui-iconfont">&#xe6d4;</i></a><a id="js-tabNav-next" class="btn radius btn-default size-S" href="javascript:;"><i class="Hui-iconfont">&#xe6d7;</i></a></div>
 </div>
-	@section("main")
-	@show()
+<div id="iframe_box" class="Hui-article">
+				<div class="container">
+                    @if(session('success'))
+                    <div class="mws-form-message success">
+                        {{session('success')}}
+                    </div>
+                    @endif
+                    @if(session("error"))
+                    <div class="mws-form-message warning">
+                        {{session("error")}}
+                    </div>
+                    @endif		
+				</div>
+					@section("main")
+					@show()
 </div>
 </section>
 

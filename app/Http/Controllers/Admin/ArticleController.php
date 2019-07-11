@@ -1,35 +1,22 @@
 <?php
 
-namespace App\Http\Controllers\Home;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
-use Hash;
-class IndexController extends Controller
+class ArticleController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public static function getCatesBypid($pid)
-    {
-        $data = DB::table("cates") -> where("pid","=",$pid) -> get();
-        $data1 = array();
-        foreach($data as $key=>$value)
-        {
-            $value -> suv = self::getCatesBypid($value -> id);
-            $data1[] = $value;
-        }
-        return $data1;
-    }
-
     public function index()
     {
-        $cates = self::getCatesBypid(0);
-        //加载首页模板
-        return view("Home.Index.index",['cates'=>$cates]);
+        //
+        $article = DB::table("articles") -> get();
+        return view("Admin.Article.index",['article'=>$article]);
     }
 
     /**
@@ -39,8 +26,7 @@ class IndexController extends Controller
      */
     public function create()
     {
-        //加载注册页面
-        return view("Home.Index.add");
+        //
     }
 
     /**
@@ -51,7 +37,7 @@ class IndexController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request -> all());
+        //
     }
 
     /**
@@ -74,6 +60,7 @@ class IndexController extends Controller
     public function edit($id)
     {
         //
+        dd($id);
     }
 
     /**
@@ -97,5 +84,21 @@ class IndexController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    //删除
+    public function del(Request $request)
+    {
+        $arr = $request -> input("arr");
+        // dd($arr);
+        // if($arr=="")
+        // {
+        //     echo "至少选择一条数据才能删除";die;
+        // }
+        foreach ($arr as $key=>$value)
+        {
+            DB::table("articles") -> where("id","=",$value) -> delete();
+        }
+        echo 1;
     }
 }

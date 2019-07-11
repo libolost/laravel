@@ -1,15 +1,5 @@
-@extends("Admin.Adminpublic.index")
-@section("main")
 <div class="page-container">
-	<form action="/adminuser" method="get">
-		<div class="text-c">
-			<input type="text" name="keyword" id="" placeholder=" 输入用户名" style="width:250px" class="input-text">
-			<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont"></i> 搜索</button>
-		</div>
-	</form>
-	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont"></i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加用户" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="/adminuser/create"><i class="Hui-iconfont"></i> 添加用户</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div>
 	
-	<div id="uid">
 	<table class="table table-border table-bordered table-bg table-hover table-sort table-responsive dataTable no-footer" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
 			<thead>
 				<tr class="text-c" role="row">
@@ -54,20 +44,6 @@
 			</tbody>
 		</table>
 		</div>
-		<div class="dataTables_paginate paging_full_numbers" id="pages"style="float:right">
-      @foreach($pp as $val)
-	  <button class="btn btn-danger" onclick="page({{$val}})">{{$val}}</button>
-	  @endforeach
-     </div>
+	
 	</div>
 </div>
-<script>
-	function page(page)
-	{
-		$.get("/adminuser",{page:page},function(data){
-			$('#uid').html(data);
-		});
-	}
-</script>
-@endsection
-@section("title","用户列表")

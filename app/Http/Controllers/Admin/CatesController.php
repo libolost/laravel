@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
+//导入模型类
+use App\Models\User;
 class CatesController extends Controller
 {
     /**
@@ -12,10 +14,26 @@ class CatesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //获取数据
+     public static function getCates()
+     {
         $cates = DB::table("cates") ->select(DB::raw("*,concat(path,',',id)as paths")) -> orderBy("paths") -> get();
+        foreach($cates as $key => $value)
+        {
+            $path = $value -> path;
+            $arr = explode(",",$path);
+            $len = count($arr) - 1;
+            $cates[$key] -> name = str_repeat("*|",$len).$value -> name;
+            
+        }
+        return $cates;
+     }
+
+    public function index(Request $request)
+    {
+        //获取搜索关键词
+        $k = $request -> input('keyword');
+        //获取数据
+        $cates = DB::table("cates") ->select(DB::raw("*,concat(path,',',id)as paths")) -> where("name","like","%".$k."%") -> orderBy("paths") -> paginate(5);
         foreach($cates as $key => $value)
         {
             $path = $value -> path;
@@ -25,7 +43,7 @@ class CatesController extends Controller
             
         }
         //加载分类列表
-        return view("Admin.Cates.index",['cates'=>$cates]);
+        return view("Admin.Cates.index",['cates'=>$cates,'request'=>$request -> all()]);
     }
 
     /**
@@ -36,7 +54,7 @@ class CatesController extends Controller
     public function create()
     {
         //分类添加
-        $cates = DB::table("cates") -> get();
+        $cates = self::getCates();
         return view("Admin.Cates.add",["cates"=>$cates]);
     }
 
@@ -66,7 +84,10 @@ class CatesController extends Controller
         //插入数据库
         if(DB::table("cates") -> insert($data))
         {
-            echo 'OK';
+            return redirect("/admincates") -> with("success","添加成功");
+        }else
+        {
+            return back() -> with("error","添加失败");
         }
     }
 
@@ -89,7 +110,10 @@ class CatesController extends Controller
      */
     public function edit($id)
     {
-        //
+        //获取数据
+        $cates = DB::table("cates") ->where("id","=",$id) -> first();
+        //加载修改模板分配数据
+        return view("Admin.Cates.edit",['cates'=>$cates]);
     }
 
     /**
@@ -101,7 +125,16 @@ class CatesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //去除两个字段
+        $data = $request -> except(['_token','_method']);
+        //执行插入数据库
+        if(DB::table("cates") -> where("id","=",$id) -> update($data))
+        {
+            return redirect("/admincates") -> with("success","修改成功");
+        }else
+        {
+            return back() -> with("error","修改失败");
+        }
     }
 
     /**
@@ -112,6 +145,20 @@ class CatesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //删除操作
+        $s = DB::table("cates") -> where("pid","=",$id) -> count();
+        if($s > 0)
+        {
+            return redirect("/admincates") -> with("error","请先删除子类!");
+        }else
+        {
+            if(DB::table("cates") -> where("id","=",$id) -> delete())
+            {
+                return redirect("/admincates") -> with("success","删除成功");
+            }else
+            {
+                return redirect("/admincates") -> with("success","删除成功");
+            }
+        }
     }
 }

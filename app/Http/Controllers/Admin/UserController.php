@@ -10,7 +10,7 @@ use Hash;
 use App\Models\User;
 use DB;
 //导入检验请求类
-use App\Http\Requests\UserInsertRequest;
+use App\Http\Requests\UsersInsertRequest;
 class UserController extends Controller
 {
     /**
@@ -22,10 +22,39 @@ class UserController extends Controller
     {
         //获取搜索参数
         $k = $request -> input("keyword");
-        //获取列表数据
-        $data = User::where ("username","like","%".$k."%") -> paginate(5);
-        //加载用户列表模板
-        return view("Admin.User.index",['data'=>$data,'request'=>$request -> all()]);
+        // //获取列表数据
+        $data = User::where ("username","like","%".$k."%") -> paginate(2);
+        // //加载用户列表模板
+        // return view("Admin.User.index",['data'=>$data,'request'=>$request -> all()]);
+        //获取数据总条数
+        $tot = User::count();
+        //每页显示数据条数
+        $rev = 2;
+        //获取最大页数
+        $maxpage = ceil($tot/$rev);
+        //获取Ajax传递的参数
+        $page = $request -> input('page');
+
+        if(empty($page))
+        {
+            $page = 1;
+        }
+
+        //获取偏移量
+        $offset = ($page-1) * $rev;
+        //执行sql语句
+        $data = User::offset($offset) -> limit($rev) -> get();
+
+        //判断当前请求是否是ajax请求
+        if($request -> ajax())
+        {
+            return view("Admin.User.ajaxpage",['data'=>$data]);
+        }
+        for($i=1;$i<=$maxpage;$i++)
+        {
+            $pp[$i] = $i;
+        }
+        return view("Admin.User.index",["pp"=>$pp,'data'=>$data]);
     }
 
     /**
@@ -37,32 +66,32 @@ class UserController extends Controller
     {
         //加载添加模板
         return view("Admin.User.add");
+        
+        /**
+        * Store a newly created resource in storage.
+        *
+        * @param  \Illuminate\Http\Request  $request
+        * @return \Illuminate\Http\Response
+        */
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //去除字段
-       $data = $request -> except(['repassword','_token']);
-       //加密密码
-       $data['password'] = Hash::make($data['password']);
-       $data['status'] = 1;
-    //    $data['token'] = str_random(50);
-       //执行数据库插入
-       if(User::create($data))
-       {
-           return redirect("/adminuser") -> with("success","添加成功");
-       }else
-       {
-           return redirect("/adminuser") -> with("success","添加失败");
-       }
-
-    }
+        public function store(UsersInsertRequest $request)
+        {
+            //去除字段
+            $data = $request -> except(['repassword','_token']);
+            //加密密码
+            $data['password'] = Hash::make($data['password']);
+            $data['status'] = 0;
+            //执行数据库插入
+            if(User::create($data))
+        
+            {
+                return redirect("/adminuser") -> with("success","添加成功");
+            }else
+            {
+                return back() -> with("error","添加失败");
+            }
+        }
+  
 
     /**
      * Display the specified resource.

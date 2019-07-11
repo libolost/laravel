@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserInsertRequest extends FormRequest
+class UsersInsertRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,15 +25,15 @@ class UserInsertRequest extends FormRequest
     {
         return [
             //
-            'username'=>'required|regex:/\w{4,8}/|unique:users',
+            'username'=>'required|regex:/\w{4,8}/|unique:user',
             //密码规则
             'password'=>'required|regex:/\w{6,18}/',
             //重复密码规则
             'repassword'=>'required|regex:/\w{6,18}/|same:password',
             //邮箱
-            'email'=>'required|email|unique:users',
+            'email'=>'required|email|unique:user',
             //电话
-            'phone'=>'required|regex:/\d{11}/|unique:users',
+            'phone'=>'required|regex:/\d{11}/|unique:user',
         ];
     }
 
